@@ -1,0 +1,4 @@
+name,demand,capacity,latency,risk,weight,score,decision
+case_1,87,107,19,18,6,165,review
+case_2,100,89,24,13,7,198,accept
+case_3,66,91,11,12,5,154,review
