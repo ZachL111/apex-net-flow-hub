@@ -1,0 +1,32 @@
+{
+  "index": 530,
+  "phase": 2,
+  "batch": 59,
+  "name": "apex-net-flow-hub",
+  "planned_name": "apex-net-flow-hub",
+  "language": "TypeScript",
+  "category": "Networking",
+  "goal": "Design a TypeScript verification harness for flow systems, covering format conversion, round-trip fixtures, and failure-oriented tests.",
+  "repository_url": "https://github.com/ZachL111/apex-net-flow-hub",
+  "verification_command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1",
+  "model": {
+    "inputs": [
+      "demand",
+      "capacity",
+      "latency",
+      "risk",
+      "weight"
+    ],
+    "threshold": 180,
+    "risk_penalty": 6,
+    "latency_penalty": 2,
+    "weight_bonus": 5,
+    "decision_rule": "accept when score is greater than or equal to threshold, otherwise review"
+  },
+  "quality_gates": [
+    "readme constraint scan",
+    "fixture presence check",
+    "metadata JSON parse",
+    "language verifier"
+  ]
+}
