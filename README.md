@@ -1,69 +1,40 @@
 # apex-net-flow-hub
 
-`apex-net-flow-hub` is a TypeScript project for Networking. It turns design a TypeScript verification harness for flow systems, covering format conversion, round-trip fixtures, and failure-oriented tests into a small local model with readable fixtures and a direct verification command.
+`apex-net-flow-hub` keeps a focused TypeScript implementation around networking. The project goal is to design a TypeScript verification harness for flow systems, covering format conversion, round-trip fixtures, and failure-oriented tests.
 
-## Reading Apex Net Flow Hub
+## Why This Exists
 
-Start with the README, then open `metadata/project.json` to check the constants behind the examples. After that, `fixtures/cases.csv` shows the compact path and `examples/extended_cases.csv` gives a wider look at the same rule.
+I want this repository to be useful as a quick reading exercise: fixtures first, implementation second, verifier last.
 
-## What It Does
+## Apex Net Flow Hub Review Notes
 
-- Includes extended examples for retry behavior, including `surge` and `degraded`.
-- Documents policy decisions tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-- Stores project constants and verification metadata in `metadata/project.json`.
-- Adds a repository audit script that checks structure before running the language verifier.
+`recovery` and `stale` are the cases worth reading first. They show the optimistic and cautious ends of the fixture.
 
-## Purpose
+## Capabilities
 
-The goal is to capture the core behavior in code and make the surrounding assumptions obvious. A reader should be able to run the verifier, open the fixtures, and understand why each decision was made.
+- `fixtures/domain_review.csv` adds cases for packet span and retry pressure.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/apex-net-flow-walkthrough.md` walks through the case spread.
+- The TypeScript code includes a review path for `socket risk` and `packet span`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Files Worth Reading
+## Implementation Shape
 
-- `src`: primary implementation
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-- `package.json`: Node package scripts
+The repository has two validation layers: the original compact policy fixture and the domain review fixture. They are separate so one can change without hiding failures in the other.
 
-## Design Sketch
+The TypeScript addition stays small enough to inspect in one sitting.
 
-The core is a scoring model over demand, capacity, latency, risk, and weight. That keeps packet shape, socket state, and retry behavior in one explicit decision path. The threshold is 180, with risk penalty 6, latency penalty 2, and weight bonus 5. The TypeScript project keeps types close to the model and compiles before running its checks.
-
-## Usage
+## Local Usage
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
-
-## Fixture Notes
-
-The extended cases are not random smoke tests. `degraded` keeps pressure on the review path, while `surge` shows the model when capacity and weight are strong enough to clear the threshold.
-
 ## Verification
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
+The same command runs the local verification path. The highest-scoring domain case is `recovery` at 195, which lands in `ship`. The most cautious case is `stale` at 106, which lands in `watch`.
 
-The audit command checks repository structure and README constraints before it delegates to the verifier.
+## Roadmap
 
-## Limits
-
-This code is local-first. It makes no claim about deployed usage and avoids credentials, hosted state, and environment-specific setup.
-
-## Next Directions
-
-- Add a comparison mode that shows how decisions change when one signal is adjusted.
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add a short report command that prints the score breakdown for a single scenario.
-- Add one more networking fixture that focuses on a malformed or borderline input.
-
-## Setup
-
-Use a normal shell with TypeScript available on `PATH`. The verifier is written as a PowerShell script because the portfolio was assembled on Windows.
+The fixture set is small enough to audit by hand. The next useful expansion is malformed input coverage, not extra surface area.
